@@ -1,0 +1,108 @@
+import java.util.stream.*;
+import java.util.Arrays;
+
+class Person {
+    String name;
+    String address;
+    
+    Person(String name, String address){
+        this.name = name;
+        this.address = address;
+    }
+    
+    public String getName() {
+        return this.name;
+    }
+    
+    public String getAddress() {
+        return this.address;
+    }
+    
+    public void setAddress(String address) {
+        this.address = address;
+    }
+    
+    public String toString(){
+        return this.name + "(" + this.address + ")";
+    }
+    
+}
+
+class Student extends Person {
+    
+    private int numCourse = 0;
+    private String course[] = new String[21];
+    private int grades[] = new int[21];
+    
+    Student(String name, String address) {
+        super(name, address);
+    }
+    
+    public void addCourseGrade(String course, int grade) {
+        if (this.numCourse < 21) {
+            this.course[this.numCourse] = course;
+            this.grades[this.numCourse] = grade;
+            this.numCourse++;
+        } else {
+            System.out.println("Maaf, batas mata kuliah telah terpenuhi!");
+        }
+    }
+    
+    public void printGrades() {
+        System.out.println("List nilai kuliah");
+        for (int i = 0;i < this.numCourse;i++) {
+            System.out.println(this.course[i] + "=>" + this.grades[i]);
+        }
+    }
+    
+    public double getAverageGrade() {
+        return IntStream.of(this.grades).sum() / this.grades.length;
+    }
+    
+    public String toString() {
+        return "Student : " + getName() + "(" + getAddress() + ")";
+    }
+    
+}
+
+class Teacher extends Person {
+    private int numCourse = 0;
+    private String course[] = new String[21];
+    
+    Teacher(String name, String address) {
+        super(name, address);
+    }
+    
+    public boolean addCourse(String course) {
+        if (!Arrays.stream(this.course).anyMatch(course::equals)) {
+            if (this.numCourse < 21) {
+                this.course[this.numCourse] = course;
+                this.numCourse++;
+            } else {
+                System.out.println("Maaf, batas mata kuliah telah terpenuhi!");
+            }
+            return true;
+        } else return false;
+    }
+    
+    public boolean removeCourse(String course) {
+        if (Arrays.stream(this.course).anyMatch(course::equals)) {
+            return true;
+        } else return false;
+    } 
+}
+
+class Main {
+    public static void main(String[] args) {
+        Person p1 = new Person("Fatwa", "Cipetir");
+        Student s1 = new Student("Saeful", "Babakan");
+        Teacher t1 = new Teacher("Guru", "Cisaat");
+        
+        s1.addCourseGrade("PBO", 7);
+        s1.printGrades();
+        System.out.println(s1.toString());
+        
+        System.out.println(t1.addCourse("PBO"));
+        System.out.println(t1.removeCourse("PBO"));
+    }
+}
